@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="webdev_media.manager.class">WebDev\Bundle\MediaBundle\Media\MediaManager</parameter>
+        <parameter key="webdev_media.transformations_path">%kernel.root_dir%/../web</parameter>
+        <parameter key="webdev_media.imagine.class">Imagine\Imagick\Imagine</parameter>
+        <parameter key="webdev_media.operator.class">WebDev\Bundle\MediaBundle\Media\MediaOperator</parameter>
+        <parameter key="webdev_media.transformation_factory.class">WebDev\Bundle\MediaBundle\Media\TransformationFactory</parameter>
+        <parameter key="webdev_media.doctrine_repository.class">WebDev\Bundle\MediaBundle\Media\DoctrineMediaRepository</parameter>
+        <parameter key="webdev_media.entity_repository.injector.class">WebDev\Bundle\MediaBundle\EventHandler\EntityMediaInjector</parameter>
+        <parameter key="webdev_media.twig_extension.class">WebDev\Bundle\MediaBundle\Twig\MediaBundleExtension</parameter>
+    </parameters>
+    <services>
+        <service id="media.imagine" class="%webdev_media.imagine.class%"></service>
+        <service id="media.manager" class="%webdev_media.manager.class%">
+            <argument type="service" id="media.imagine" />
+            <call method="setTransformationPath"><argument>%webdev_media.transformations_path%</argument></call>
+        </service>
+        <service id="media.doctrine_repository_template" class="%webdev_media.doctrine_repository.class%" abstract="true">
+        </service>
+        <service id="media.transformation_factory" class="%webdev_media.transformation_factory.class%">
+        </service>
+        <service id="media.twig_extension" class="%webdev_media.twig_extension.class%">
+            <tag name="twig.extension" />
+            <argument type="service" id="media.manager" />
+        </service>
+    </services>
+</container>
