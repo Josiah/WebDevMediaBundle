@@ -17,11 +17,19 @@
         <service id="media.imagine" class="%webdev_media.imagine.class%"></service>
         <service id="media.manager" class="%webdev_media.manager.class%">
             <argument type="service" id="media.imagine" />
-            <call method="setTransformationPath"><argument>%webdev_media.transformations_path%</argument></call>
+            <call method="setTransformationPath">
+                <argument>%webdev_media.transformations_path%</argument>
+            </call>
+            <call method="setLiipImagineCacheManager">
+                <argument type="service" id="liip_imagine.cache.manager"
+                    on-invalid="ignore" />
+            </call>
         </service>
-        <service id="media.doctrine_repository_template" class="%webdev_media.doctrine_repository.class%" abstract="true">
+        <service id="media.doctrine_repository_template" class="%webdev_media.doctrine_repository.class%"
+            abstract="true">
         </service>
-        <service id="media.transformation_factory" class="%webdev_media.transformation_factory.class%">
+        <service id="media.transformation_factory"
+            class="%webdev_media.transformation_factory.class%">
         </service>
         <service id="media.twig_extension" class="%webdev_media.twig_extension.class%">
             <tag name="twig.extension" />

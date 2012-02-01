@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('entity_manager')->defaultValue('default')->end()
                             ->scalarNode('path')->isRequired()->end()
                             ->scalarNode('property')->isRequired()->end()
+                            ->scalarNode('derivatives')->end()
                         ->end()
                     ->end()
                 ->end()

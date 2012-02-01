@@ -1,5 +1,7 @@
 <?php namespace WebDev\Bundle\MediaBundle\Media;
 
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+
 use Imagine\Image\ImagineInterface;
 
 use Imagine\Filter\Transformation;
@@ -21,6 +23,23 @@ class MediaManager
     public function __construct(ImagineInterface $imagine)
     {
         $this->imagine = $imagine;
+    }
+    
+    /**
+     * The Imagine Cache Manager
+     * 
+     * @var CacheManager
+     */
+    protected $liipImagineCacheManager;
+    
+    /**
+     * Sets the Liip Imagine bundle cache manager
+     * 
+     * @param CacheManager $cacheManager
+     */
+    public function setLiipImagineCacheManager(CacheManager $cacheManager)
+    {
+        $this->liipImagineCacheManager = $cacheManager;
     }
     
     /**
@@ -117,70 +136,10 @@ class MediaManager
     }
     
     /**
-     * The possible transformations that can be made by this media manager
-     * 
-     * @var array
-     */
-    protected $transformations;
-    
-    /**
-     * Adds a transformation to this media manager
-     * 
-     * @param string $name
-     * @param Transformation $transformation
-     * @return \WebDev\Bundle\MediaBundle\Media\MediaRepository
-     */
-    public function addTransformation($name, Transformation $transformation)
-    {
-        $this->transformations[$name] = $transformation;
-        return $this;
-    }
-    
-    /**
-     * Gets the transformation identified by the specified transformation name
-     * 
-     * @param string $name
-     * @throws Exception when the transformation cannot be found
-     * @return Transformation
-     */
-    public function getTransformation($name)
-    {
-       if(isset($this->transformations[$name]))
-       {
-           return $this->transformations[$name];
-       }
-       else
-       {
-           throw new Exception("No transformation in this media manager named '{$name}'");
-       }
-    }
-    
-    /**
-     * Performs the specified transformation on the media file
-     * 
-     * @param string $repositoryName
-     * @param mixed $id
-     * @param string $transformationName
-     * @param string $relativePath
-     */
-    public function transform($repositoryName, $id, $transformationName, $relativePath)
-    {
-        $repository = $this->getRepository($repositoryName);
-        $file = $repository->find($id);
-        
-        $absolutePath = $this->getTransformationPath().$relativePath;
-        
-        $this->getTransformation($transformationName)
-            ->apply($this->imagine->open($file->getRealPath()))
-            ->save($absolutePath);
-        
-        return new SplFileInfo($absolutePath);
-    }
-    
-    /**
      * Invokes the correct repositories to process the media on the specified object
      * 
      * @param object $object
+     * @var $repository MediaRepository
      */
     public function process($object)
     {
